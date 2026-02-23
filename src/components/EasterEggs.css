@@ -1,0 +1,349 @@
+/* Easter Eggs Styles */
+
+/* Click Counter */
+.click-counter {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.click-counter.activated {
+  animation: celebrate 0.5s ease-in-out;
+}
+
+@keyframes celebrate {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.2) rotate(-5deg);
+  }
+  75% {
+    transform: scale(1.2) rotate(5deg);
+  }
+}
+
+/* Secret Message */
+.secret-message {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.secret-message-hidden,
+.secret-message-revealed {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.secret-message-hidden {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.secret-message-revealed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transform: scale(0.8);
+  color: var(--color-accent-green);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.secret-message.revealed .secret-message-hidden {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.secret-message.revealed .secret-message-revealed {
+  opacity: 1;
+  transform: scale(1);
+  animation: revealGlow 1s ease-in-out infinite;
+}
+
+@keyframes revealGlow {
+  0%, 100% {
+    text-shadow: 0 0 10px var(--color-glow-green);
+  }
+  50% {
+    text-shadow: 0 0 20px var(--color-glow-green),
+                 0 0 30px var(--color-glow-teal);
+  }
+}
+
+/* Confetti Explosion */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.confetti-particle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  animation: confettiFall 3s ease-out forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Matrix Rain */
+.matrix-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+}
+
+.matrix-column {
+  position: absolute;
+  top: -100%;
+  width: 20px;
+  font-family: monospace;
+  font-size: 14px;
+  color: var(--color-accent-green);
+  animation: matrixFall linear infinite;
+  text-shadow: 0 0 5px var(--color-glow-green);
+}
+
+.matrix-char {
+  display: block;
+  opacity: 0.8;
+}
+
+@keyframes matrixFall {
+  0% {
+    top: -100%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+/* Shake Effects */
+@keyframes shakeLow {
+  0%, 100% { transform: translate(0, 0); }
+  10%, 30%, 50%, 70%, 90% { transform: translate(-2px, 2px); }
+  20%, 40%, 60%, 80% { transform: translate(2px, -2px); }
+}
+
+@keyframes shakeMedium {
+  0%, 100% { transform: translate(0, 0); }
+  10%, 30%, 50%, 70%, 90% { transform: translate(-5px, 5px); }
+  20%, 40%, 60%, 80% { transform: translate(5px, -5px); }
+}
+
+@keyframes shakeHigh {
+  0%, 100% { transform: translate(0, 0); }
+  10%, 30%, 50%, 70%, 90% { transform: translate(-10px, 10px); }
+  20%, 40%, 60%, 80% { transform: translate(10px, -10px); }
+}
+
+body.shake-low {
+  animation: shakeLow 0.5s ease-in-out;
+}
+
+body.shake-medium {
+  animation: shakeMedium 0.5s ease-in-out;
+}
+
+body.shake-high {
+  animation: shakeHigh 0.5s ease-in-out;
+}
+
+/* Rainbow Text */
+.rainbow-text {
+  display: inline-block;
+}
+
+.rainbow-char {
+  display: inline-block;
+  animation: rainbowColor 3s linear infinite;
+}
+
+@keyframes rainbowColor {
+  0% { color: #ff0000; }
+  14% { color: #ff7f00; }
+  28% { color: #ffff00; }
+  42% { color: #00ff00; }
+  57% { color: #0000ff; }
+  71% { color: #4b0082; }
+  85% { color: #9400d3; }
+  100% { color: #ff0000; }
+}
+
+/* Glitch Effect */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  animation: glitchTop 1s linear infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+  color: var(--color-accent-green);
+}
+
+.glitch-text::after {
+  animation: glitchBottom 1.5s linear infinite;
+  clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+  color: var(--color-accent-teal);
+}
+
+@keyframes glitchTop {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+}
+
+@keyframes glitchBottom {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(2px, -2px); }
+  40% { transform: translate(2px, 2px); }
+  60% { transform: translate(-2px, -2px); }
+  80% { transform: translate(-2px, 2px); }
+}
+
+/* Floating Hearts */
+.floating-hearts {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.heart {
+  position: absolute;
+  font-size: 30px;
+  animation: floatHeart 4s ease-in-out forwards;
+  opacity: 0;
+}
+
+@keyframes floatHeart {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Disco Mode */
+.disco-mode {
+  animation: discoBackground 1s linear infinite;
+}
+
+@keyframes discoBackground {
+  0% { background-color: #ff0000; }
+  14% { background-color: #ff7f00; }
+  28% { background-color: #ffff00; }
+  42% { background-color: #00ff00; }
+  57% { background-color: #0000ff; }
+  71% { background-color: #4b0082; }
+  85% { background-color: #9400d3; }
+  100% { background-color: #ff0000; }
+}
+
+/* Nyan Cat Trail */
+.nyan-trail {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  animation: nyanFade 1s ease-out forwards;
+}
+
+@keyframes nyanFade {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .confetti-particle,
+  .matrix-column,
+  .rainbow-char,
+  .heart,
+  .nyan-trail,
+  .click-counter.activated,
+  .secret-message.revealed .secret-message-revealed,
+  body.shake-low,
+  body.shake-medium,
+  body.shake-high,
+  .disco-mode {
+    animation: none !important;
+  }
+
+  .secret-message-hidden,
+  .secret-message-revealed {
+    transition: opacity 0.3s ease;
+  }
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  .confetti-particle {
+    width: 8px;
+    height: 8px;
+  }
+
+  .matrix-column {
+    width: 15px;
+    font-size: 12px;
+  }
+
+  .heart {
+    font-size: 20px;
+  }
+}

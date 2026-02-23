@@ -1,0 +1,224 @@
+/* Loading Skeleton Styles */
+.skeleton-text,
+.skeleton-card,
+.skeleton-avatar,
+.skeleton-button,
+.skeleton-grid,
+.skeleton-profile,
+.skeleton-table {
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmerAnimation {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Base skeleton element */
+.skeleton-line,
+.skeleton-image,
+.skeleton-title,
+.skeleton-avatar,
+.skeleton-button,
+.skeleton-table-cell {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-card) 0%,
+    rgba(94, 179, 199, 0.1) 50%,
+    var(--color-bg-card) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmerAnimation 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Skeleton Text */
+.skeleton-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-line {
+  height: 16px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+/* Skeleton Card */
+.skeleton-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  overflow: hidden;
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 150px;
+  margin-bottom: 0;
+}
+
+.skeleton-content {
+  padding: 20px;
+}
+
+.skeleton-title {
+  height: 24px;
+  width: 60%;
+  margin-bottom: 15px;
+}
+
+/* Skeleton Avatar */
+.skeleton-avatar {
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Skeleton Button */
+.skeleton-button {
+  border-radius: var(--radius-md);
+}
+
+/* Skeleton Grid */
+.skeleton-grid {
+  display: grid;
+  width: 100%;
+}
+
+/* Skeleton Profile */
+.skeleton-profile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.skeleton-profile-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Skeleton Table */
+.skeleton-table {
+  width: 100%;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.skeleton-table-header {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  padding: 15px;
+  background: rgba(94, 179, 199, 0.05);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.skeleton-table-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  padding: 15px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.skeleton-table-row:last-child {
+  border-bottom: none;
+}
+
+.skeleton-table-cell {
+  height: 20px;
+}
+
+.skeleton-header-cell {
+  height: 24px;
+}
+
+/* Stagger animation for multiple skeletons */
+.skeleton-grid > *:nth-child(1) { animation-delay: 0s; }
+.skeleton-grid > *:nth-child(2) { animation-delay: 0.1s; }
+.skeleton-grid > *:nth-child(3) { animation-delay: 0.2s; }
+.skeleton-grid > *:nth-child(4) { animation-delay: 0.3s; }
+.skeleton-grid > *:nth-child(5) { animation-delay: 0.4s; }
+.skeleton-grid > *:nth-child(6) { animation-delay: 0.5s; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .skeleton-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .skeleton-profile {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .skeleton-table-header,
+  .skeleton-table-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dark mode support (if implemented) */
+@media (prefers-color-scheme: light) {
+  .skeleton-line,
+  .skeleton-image,
+  .skeleton-title,
+  .skeleton-avatar,
+  .skeleton-button,
+  .skeleton-table-cell {
+    background: linear-gradient(
+      90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%
+    );
+  }
+}
+
+/* Accessibility - Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-line,
+  .skeleton-image,
+  .skeleton-title,
+  .skeleton-avatar,
+  .skeleton-button,
+  .skeleton-table-cell {
+    animation: none;
+  }
+  
+  .skeleton-text,
+  .skeleton-card,
+  .skeleton-avatar,
+  .skeleton-button,
+  .skeleton-grid,
+  .skeleton-profile,
+  .skeleton-table {
+    animation: none;
+    opacity: 0.7;
+  }
+}

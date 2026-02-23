@@ -1,0 +1,13 @@
+name = "technocoders-email-handler"
+main = "workers/email-handler.js"
+compatibility_date = "2024-01-01"
+
+# Environment variables (set these in Cloudflare Dashboard)
+# RECIPIENT_EMAIL = "info@technocoders.com"
+
+[env.production]
+name = "technocoders-email-handler"
+route = "technocoders.com/api/contact"
+
+[env.development]
+name = "technocoders-email-handler-dev"

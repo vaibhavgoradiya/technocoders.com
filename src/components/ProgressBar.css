@@ -1,0 +1,306 @@
+/* Scroll Progress Bar */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  z-index: 9998;
+  backdrop-filter: blur(10px);
+}
+
+.scroll-progress-fill {
+  height: 100%;
+  background: var(--color-accent-green);
+  transition: width 0.1s ease-out;
+  box-shadow: 0 0 10px var(--color-glow-green);
+}
+
+/* Circular Progress */
+.circular-progress {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circular-progress svg {
+  transform: rotate(-90deg);
+}
+
+.circular-progress-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.circular-progress-fill {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease-out;
+}
+
+.circular-progress-text {
+  position: absolute;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+/* Linear Progress */
+.linear-progress-container {
+  width: 100%;
+}
+
+.linear-progress-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.linear-progress {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.linear-progress-fill {
+  height: 100%;
+  background: var(--color-accent-green);
+  border-radius: 10px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.linear-progress-fill.animated::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: progressShimmer 1.5s infinite;
+}
+
+@keyframes progressShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Loading Progress (Indeterminate) */
+.loading-progress {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+.loading-progress-bar {
+  height: 100%;
+  width: 30%;
+  background: var(--color-accent-green);
+  animation: loadingProgress 1.5s ease-in-out infinite;
+  box-shadow: 0 0 10px var(--color-glow-green);
+}
+
+@keyframes loadingProgress {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(350%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Step Progress */
+.step-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px 0;
+}
+
+.step-progress-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+
+.step-progress-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-bg-card);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.step-progress-item.active .step-progress-circle {
+  border-color: var(--color-accent-green);
+  background: rgba(94, 179, 199, 0.1);
+  color: var(--color-accent-green);
+  box-shadow: 0 0 20px var(--color-glow-green);
+}
+
+.step-progress-item.completed .step-progress-circle {
+  border-color: var(--color-accent-green);
+  background: var(--color-accent-green);
+  color: var(--color-bg-primary);
+}
+
+.step-progress-label {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.step-progress-item.active .step-progress-label,
+.step-progress-item.completed .step-progress-label {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.step-progress-line {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1;
+  transition: background 0.3s ease;
+}
+
+.step-progress-line.completed {
+  background: var(--color-accent-green);
+}
+
+/* Skill Progress */
+.skill-progress {
+  margin-bottom: 20px;
+}
+
+.skill-progress-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.skill-name {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.skill-level {
+  font-weight: 600;
+  color: var(--color-accent-green);
+}
+
+.skill-progress-bar {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.skill-progress-fill {
+  height: 100%;
+  background: var(--color-accent-green);
+  border-radius: 10px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px var(--color-glow-green);
+  position: relative;
+}
+
+.skill-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: skillShimmer 2s infinite;
+}
+
+@keyframes skillShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .step-progress {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .step-progress-item {
+    width: 100%;
+  }
+
+  .step-progress-line {
+    top: 50%;
+    left: 20px;
+    width: 2px;
+    height: 100%;
+    transform: translateY(-50%);
+  }
+
+  .circular-progress-text {
+    font-size: 1rem;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .linear-progress-fill,
+  .circular-progress-fill,
+  .skill-progress-fill {
+    transition: none;
+  }
+
+  .linear-progress-fill.animated::after,
+  .skill-progress-fill::after,
+  .loading-progress-bar {
+    animation: none;
+  }
+}

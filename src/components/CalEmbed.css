@@ -1,0 +1,160 @@
+.cal-embed-section {
+  padding: var(--spacing-2xl) 0;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, transparent 0%, rgba(94, 179, 199, 0.03) 100%);
+}
+
+.cal-embed-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto var(--spacing-2xl);
+  position: relative;
+  z-index: 1;
+}
+
+/* Luxury Badge */
+.luxury-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 12px 24px;
+  background: linear-gradient(135deg, rgba(94, 179, 199, 0.15) 0%, rgba(125, 196, 214, 0.15) 100%);
+  border: 1px solid rgba(94, 179, 199, 0.4);
+  border-radius: 50px;
+  font-size: 0.875rem;
+  color: var(--color-accent-green);
+  margin-bottom: var(--spacing-lg);
+  position: relative;
+  overflow: hidden;
+  animation: fade-in-up 0.6s ease-out;
+  box-shadow: 0 4px 20px rgba(94, 179, 199, 0.2);
+}
+
+.luxury-badge svg {
+  width: 16px;
+  height: 16px;
+}
+
+.badge-glow {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: badge-shine 3s ease-in-out infinite;
+}
+
+@keyframes badge-shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Luxury Title */
+.luxury-title {
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: var(--spacing-md);
+  background: linear-gradient(135deg, #ffffff 0%, var(--color-accent-green) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: fade-in-up 0.6s ease-out 0.1s backwards;
+}
+
+.title-line {
+  display: block;
+  color: var(--color-text-primary);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #5eb3c7 0%, #7dc4d6 50%, #4a9fb0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  display: inline-block;
+}
+
+.gradient-text::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color-accent-green), transparent);
+  border-radius: 10px;
+}
+
+.cal-subtitle {
+  font-size: 18px;
+  color: var(--color-text-secondary);
+  animation: fade-in-up 0.6s ease-out 0.2s backwards;
+}
+
+/* Cal Embed Container */
+.cal-embed-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-2xl);
+  padding: var(--spacing-xl);
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  animation: fade-in-up 0.6s ease-out 0.4s backwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.cal-embed-wrapper {
+  width: 100%;
+  min-height: 600px;
+  overflow: auto;
+  border-radius: var(--radius-lg);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .luxury-title {
+    font-size: 2.5rem;
+  }
+  
+  .cal-subtitle {
+    font-size: 1rem;
+  }
+  
+  .cal-embed-container {
+    padding: var(--spacing-lg);
+  }
+  
+  .cal-embed-wrapper {
+    min-height: 500px;
+  }
+}
+
+@media (max-width: 480px) {
+  .luxury-title {
+    font-size: 2rem;
+  }
+  
+  .cal-embed-container {
+    padding: var(--spacing-md);
+  }
+}

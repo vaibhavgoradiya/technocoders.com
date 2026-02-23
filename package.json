@@ -1,0 +1,34 @@
+{
+  "name": "technocoders-website",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name=technocoders-website",
+    "email-server": "node server/email-server.js",
+    "dev:all": "concurrently \"npm run dev\" \"npm run email-server\""
+  },
+  "dependencies": {
+    "framer-motion": "^12.30.0",
+    "gsap": "^3.14.2",
+    "lucide-react": "^0.563.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^7.12.0",
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11",
+    "concurrently": "^8.2.2"
+  }
+}

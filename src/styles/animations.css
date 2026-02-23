@@ -1,0 +1,518 @@
+/* Premium Animation Enhancements for Technocoders */
+
+/* ============================================
+   1. MICRO-INTERACTIONS - Button Animations
+   ============================================ */
+
+/* Ripple Effect */
+.btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Enhanced Button Hover with Scale and Glow */
+.btn-primary {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(94, 179, 199, 0.2);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 8px 30px rgba(94, 179, 199, 0.4),
+    0 0 40px rgba(94, 179, 199, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.btn-primary:active {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 15px rgba(94, 179, 199, 0.3);
+}
+
+.btn-secondary {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.btn-secondary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(94, 179, 199, 0.1), rgba(125, 196, 214, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-3px) scale(1.05);
+  border-color: #5eb3c7;
+  box-shadow: 
+    0 8px 25px rgba(94, 179, 199, 0.25),
+    0 0 30px rgba(94, 179, 199, 0.2);
+}
+
+.btn-secondary:hover::after {
+  opacity: 1;
+}
+
+.btn-secondary:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* ============================================
+   2. MAGNETIC CURSOR EFFECT
+   ============================================ */
+
+.magnetic-btn {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.magnetic-btn:hover {
+  z-index: 10;
+}
+
+/* Magnetic cursor is handled via JavaScript */
+
+/* ============================================
+   3. TEXT REVEAL ANIMATIONS
+   ============================================ */
+
+.text-reveal {
+  overflow: hidden;
+  display: inline-block;
+}
+
+.text-reveal-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(100%);
+  animation: revealWord 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.text-reveal-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: revealLetter 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes revealWord {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes revealLetter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger delays for text reveal */
+.text-reveal-word:nth-child(1) { animation-delay: 0.1s; }
+.text-reveal-word:nth-child(2) { animation-delay: 0.2s; }
+.text-reveal-word:nth-child(3) { animation-delay: 0.3s; }
+.text-reveal-word:nth-child(4) { animation-delay: 0.4s; }
+.text-reveal-word:nth-child(5) { animation-delay: 0.5s; }
+.text-reveal-word:nth-child(6) { animation-delay: 0.6s; }
+.text-reveal-word:nth-child(7) { animation-delay: 0.7s; }
+.text-reveal-word:nth-child(8) { animation-delay: 0.8s; }
+
+/* ============================================
+   4. PAGE TRANSITIONS
+   ============================================ */
+
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-30px);
+  transition: opacity 0.3s ease-in, transform 0.3s ease-in;
+}
+
+/* Slide transitions */
+.page-slide-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.page-slide-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-slide-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.page-slide-exit-active {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 0.4s ease-in, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   5. ENHANCED SCROLL ANIMATIONS
+   ============================================ */
+
+/* Fade Up with Bounce */
+.scroll-animate-bounce {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.scroll-animate-bounce.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Rotate In */
+.scroll-animate-rotate {
+  opacity: 0;
+  transform: rotate(-10deg) scale(0.9);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-animate-rotate.visible {
+  opacity: 1;
+  transform: rotate(0) scale(1);
+}
+
+/* Blur In */
+.scroll-animate-blur {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, filter 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-animate-blur.visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+/* ============================================
+   6. CARD HOVER ENHANCEMENTS
+   ============================================ */
+
+.glass-card {
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(94, 179, 199, 0.1), rgba(125, 196, 214, 0.05));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.glass-card:hover::before {
+  opacity: 1;
+}
+
+.glass-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 20px 60px rgba(94, 179, 199, 0.2),
+    0 0 40px rgba(94, 179, 199, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   7. LOADING ANIMATIONS
+   ============================================ */
+
+@keyframes shimmerPulse {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer-loading {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(94, 179, 199, 0.2) 50%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmerPulse 2s infinite;
+}
+
+/* ============================================
+   8. MOBILE OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* Disable heavy animations on mobile for performance */
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+  
+  .glass-card:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+  
+  /* Reduce animation complexity */
+  .scroll-animate-bounce,
+  .scroll-animate-rotate,
+  .scroll-animate-blur {
+    transition-duration: 0.4s;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .btn::before {
+    display: none;
+  }
+}
+
+/* ============================================
+   9. PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+/* GPU acceleration for smooth animations */
+.btn,
+.glass-card,
+.scroll-animate,
+.scroll-animate-scale,
+.scroll-animate-left,
+.scroll-animate-right,
+.magnetic-btn {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Remove will-change after animation completes */
+.scroll-animate.visible,
+.scroll-animate-scale.visible,
+.scroll-animate-left.visible,
+.scroll-animate-right.visible {
+  will-change: auto;
+}
+/* ============================================
+   ENHANCED GLASSMORPHISM EFFECTS
+   ============================================ */
+
+/* Advanced Glass Card with Multiple Layers */
+.glass-card-premium {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-lg);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.37),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.glass-card-premium:hover::before {
+  left: 100%;
+}
+
+/* Frosted Glass Effect */
+.glass-frosted {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(30px) brightness(1.1);
+  -webkit-backdrop-filter: blur(30px) brightness(1.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+/* Neon Glass Effect */
+.glass-neon {
+  background: linear-gradient(
+    135deg,
+    rgba(94, 179, 199, 0.1),
+    rgba(125, 196, 214, 0.05)
+  );
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(94, 179, 199, 0.3);
+  box-shadow: 
+    0 0 20px rgba(94, 179, 199, 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 0 15px rgba(94, 179, 199, 0.1);
+}
+
+/* Morphing Glass Effect */
+.glass-morph {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-morph:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(94, 179, 199, 0.4);
+  transform: translateY(-5px);
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(94, 179, 199, 0.2);
+}
+
+/* 3D Glass Card */
+.glass-3d {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.glass-3d:hover {
+  transform: perspective(1000px) rotateY(5deg) rotateX(5deg);
+}
+
+/* ============================================
+   3D TRANSFORM UTILITIES
+   ============================================ */
+
+/* 3D Card Tilt Base */
+.card-3d-tilt {
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+}
+
+/* 3D Flip Card Container */
+.flip-card-container {
+  perspective: 1000px;
+  width: 100%;
+  height: 100%;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flip-card-container.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+/* 3D Hover Lift */
+.hover-lift-3d {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.hover-lift-3d:hover {
+  transform: translateY(-20px) translateZ(50px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* 3D Parallax Layer */
+.parallax-layer {
+  transition: transform 0.3s ease-out;
+  will-change: transform;
+}

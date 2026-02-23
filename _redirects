@@ -1,0 +1,8 @@
+# Redirects for SPA (Single Page Application)
+/*    /index.html   200
+
+# Force HTTPS
+http://:splat  https://:splat  301!
+
+# Redirect www to non-www (optional - uncomment if needed)
+# https://www.technocoders.com/*  https://technocoders.com/:splat  301!

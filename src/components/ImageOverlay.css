@@ -1,0 +1,430 @@
+/* Image Overlay Styles */
+
+/* Base Image Overlay */
+.image-overlay {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+}
+
+.image-overlay-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--transition-slow);
+}
+
+.image-overlay:hover .image-overlay-img {
+  transform: scale(1.05);
+}
+
+.image-overlay-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: var(--spacing-6);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.image-overlay:hover .image-overlay-content {
+  opacity: 1;
+}
+
+.image-overlay-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: white;
+  margin-bottom: var(--spacing-2);
+  transform: translateY(20px);
+  transition: transform var(--transition-normal);
+}
+
+.image-overlay:hover .image-overlay-title {
+  transform: translateY(0);
+}
+
+.image-overlay-description {
+  font-size: var(--font-size-body);
+  color: rgba(255, 255, 255, 0.9);
+  transform: translateY(20px);
+  transition: transform var(--transition-normal) 0.1s;
+}
+
+.image-overlay:hover .image-overlay-description {
+  transform: translateY(0);
+}
+
+/* Overlay Variants */
+.image-overlay-gradient .image-overlay-content {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    transparent 100%
+  );
+}
+
+.image-overlay-solid .image-overlay-content {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+.image-overlay-blur .image-overlay-content {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+}
+
+.image-overlay-color .image-overlay-content {
+  background: linear-gradient(
+    135deg,
+    rgba(94, 179, 199, 0.9),
+    rgba(138, 43, 226, 0.9)
+  );
+}
+
+/* Image Zoom */
+.image-zoom {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+}
+
+.image-zoom-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--transition-slow);
+}
+
+.image-zoom:hover .image-zoom-img {
+  transform: scale(var(--zoom-scale, 1.2));
+}
+
+/* Image Reveal */
+.image-reveal {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+}
+
+.image-reveal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  animation: imageRevealFade 0.6s ease-out 0.3s forwards;
+}
+
+.image-reveal-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-primary);
+  z-index: 1;
+}
+
+.image-reveal-left .image-reveal-overlay {
+  animation: revealLeft 0.8s ease-out forwards;
+}
+
+.image-reveal-right .image-reveal-overlay {
+  animation: revealRight 0.8s ease-out forwards;
+}
+
+.image-reveal-top .image-reveal-overlay {
+  animation: revealTop 0.8s ease-out forwards;
+}
+
+.image-reveal-bottom .image-reveal-overlay {
+  animation: revealBottom 0.8s ease-out forwards;
+}
+
+/* Image Parallax */
+.image-parallax {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  height: 400px;
+}
+
+.image-parallax-img {
+  width: 100%;
+  height: 120%;
+  object-fit: cover;
+  display: block;
+  will-change: transform;
+}
+
+/* Image Grid */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 3), 1fr);
+  gap: var(--spacing-6);
+}
+
+@media (max-width: 1024px) {
+  .image-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .image-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Image Compare */
+.image-compare {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  cursor: ew-resize;
+  user-select: none;
+}
+
+.image-compare-before,
+.image-compare-after {
+  position: relative;
+}
+
+.image-compare-after {
+  position: absolute;
+  inset: 0;
+}
+
+.image-compare img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+.image-compare-label {
+  position: absolute;
+  top: var(--spacing-4);
+  padding: var(--spacing-2) var(--spacing-4);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.image-compare-before .image-compare-label {
+  left: var(--spacing-4);
+}
+
+.image-compare-after .image-compare-label {
+  right: var(--spacing-4);
+}
+
+.image-compare-slider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: white;
+  transform: translateX(-50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.image-compare-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  background: white;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  color: var(--color-bg-primary);
+}
+
+/* Image Lightbox */
+.image-lightbox-trigger {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+}
+
+.image-lightbox-trigger img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--transition-normal);
+}
+
+.image-lightbox-trigger:hover img {
+  transform: scale(1.05);
+}
+
+.image-lightbox-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  color: var(--color-bg-primary);
+}
+
+.image-lightbox-trigger:hover .image-lightbox-icon {
+  opacity: 1;
+}
+
+.image-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-8);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.image-lightbox-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  animation: scaleIn 0.3s ease-out;
+}
+
+.image-lightbox-content img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-xl);
+}
+
+.image-lightbox-close {
+  position: absolute;
+  top: -48px;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.image-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+/* Animations */
+@keyframes imageRevealFade {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes revealLeft {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes revealRight {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes revealTop {
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes revealBottom {
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .image-parallax {
+    height: 300px;
+  }
+
+  .image-lightbox-overlay {
+    padding: var(--spacing-4);
+  }
+
+  .image-lightbox-close {
+    top: var(--spacing-4);
+    right: var(--spacing-4);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .image-overlay-img,
+  .image-zoom-img,
+  .image-reveal-img,
+  .image-parallax-img,
+  .image-lightbox-trigger img {
+    animation: none;
+    transition: none;
+  }
+
+  .image-reveal-overlay {
+    animation: none;
+  }
+}

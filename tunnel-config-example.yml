@@ -1,0 +1,29 @@
+# Cloudflare Tunnel Configuration
+# Save this as: C:\Users\<YourUsername>\.cloudflared\config.yml
+
+# Replace <TUNNEL-ID> with your actual tunnel ID
+# Get it from: cloudflared tunnel create technocoders-email
+tunnel: <TUNNEL-ID>
+
+# Replace with actual path to your credentials file
+# Windows: C:\Users\<YourUsername>\.cloudflared\<TUNNEL-ID>.json
+credentials-file: C:\Users\<YourUsername>\.cloudflared\<TUNNEL-ID>.json
+
+# Ingress rules - order matters!
+ingress:
+  # Route /api/contact to local email server
+  - hostname: technocoders.com
+    path: /api/contact
+    service: http://localhost:3001
+  
+  # Optional: Route /api/health for health checks
+  - hostname: technocoders.com
+    path: /api/health
+    service: http://localhost:3001
+  
+  # Catch-all rule (REQUIRED - must be last)
+  - service: http_status:404
+
+# Optional: Logging configuration
+# loglevel: info
+# logfile: C:\Users\<YourUsername>\.cloudflared\tunnel.log
