@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
 import './Contact.css';
 
 const Contact = () => {
@@ -38,63 +39,59 @@ const Contact = () => {
     setSubmitStatus({ type: '', message: '' });
 
     try {
-      // Send form data to Node.js Email Server
-      const apiUrl = import.meta.env.DEV
-        ? 'http://localhost:3001/api/contact'  // Development
-        : 'https://api.technocoders.com/api/contact';  // Production (Cloudflare Tunnel)
-      
-      console.log('📧 Sending email to:', apiUrl);
-      console.log('🌍 Environment:', import.meta.env.DEV ? 'Development' : 'Production');
-      console.log('📝 Form data:', {
+      // Get current timestamp in IST
+      const now = new Date();
+      const istTime = now.toLocaleString('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      });
+
+      // Prepare template parameters
+      const templateParams = {
         name: formData.name,
         email: formData.email,
-        phone: formData.phone,
-        company: formData.company
+        phone: formData.phone || 'Not provided',
+        company: formData.company || 'Not specified',
+        message: formData.message,
+        time: istTime
+      };
+
+      console.log('📧 Sending email via EmailJS...');
+      console.log('📝 Template params:', templateParams);
+
+      // Send email using EmailJS
+      const result = await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        templateParams,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+
+      console.log('✅ Email sent successfully:', result.text);
+
+      // Show success message
+      setSubmitStatus({
+        type: 'success',
+        message: 'Thank you for contacting us! We will get back to you soon.'
       });
-      
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          subject: formData.company ? `Inquiry from ${formData.company}` : 'General Inquiry',
-          message: formData.message,
-          service: formData.company || 'Not specified'
-        }),
+
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        message: ''
       });
 
-      console.log('📬 Response status:', response.status);
-      const data = await response.json();
-      console.log('📨 Response data:', data);
+      // Clear success message after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus({ type: '', message: '' });
+      }, 5000);
 
-      if (data.success) {
-        setSubmitStatus({
-          type: 'success',
-          message: 'Thank you for contacting us! We will get back to you soon.'
-        });
-        
-        // Reset form
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          company: '',
-          message: ''
-        });
-
-        // Clear success message after 5 seconds
-        setTimeout(() => {
-          setSubmitStatus({ type: '', message: '' });
-        }, 5000);
-      } else {
-        throw new Error(data.error || 'Failed to send message');
-      }
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('❌ EmailJS Error:', error);
       setSubmitStatus({
         type: 'error',
         message: 'Failed to send message. Please try again or contact us directly at info@technocoders.com'

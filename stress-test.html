@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Stress Test Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .system-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .info-value {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .metric-bar {
+            background: rgba(255, 255, 255, 0.3);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .metric-bar-fill {
+            background: white;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #startBtn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        #startBtn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(17, 153, 142, 0.3);
+        }
+
+        #stopBtn {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+
+        #stopBtn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(235, 51, 73, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .status.idle {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status.running {
+            background: #fff3e0;
+            color: #f57c00;
+            animation: pulse 2s infinite;
+        }
+
+        .status.stopped {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #856404;
+            font-size: 0.9em;
+        }
+
+        .warning strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .timer-value {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.5em;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .modal-message {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .modal-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Browser Stress Test</h1>
+        <p class="subtitle">Professional Performance Testing Tool</p>
+
+        <div class="system-info">
+            <div class="info-row">
+                <span class="info-label">CPU Cores:</span>
+                <span class="info-value" id="cpuCores">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Device Memory:</span>
+                <span class="info-value" id="deviceMemory">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Browser:</span>
+                <span class="info-value" id="browserInfo">-</span>
+            </div>
+        </div>
+
+        <div class="status idle" id="status">
+            Ready to Start
+        </div>
+
+        <div class="timer">
+            Test Duration: <span class="timer-value" id="timer">00:00</span>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-label">CPU Usage</div>
+                <div class="metric-value" id="cpuUsage">0%</div>
+                <div class="metric-bar">
+                    <div class="metric-bar-fill" id="cpuBar"></div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Memory Usage</div>
+                <div class="metric-value" id="memUsage">0 MB</div>
+                <div class="metric-bar">
+                    <div class="metric-bar-fill" id="memBar"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="startBtn">Start Test</button>
+            <button id="stopBtn" disabled>Stop Test</button>
+        </div>
+
+        <div class="warning">
+            <strong>💀☢️🔥💥 ABSOLUTE MAXIMUM SYSTEM ANNIHILATION - TOTAL DESTRUCTION MODE 💥☢️💀</strong>
+            <br><br>
+            <strong style="color: #d32f2f; font-size: 1.3em; text-decoration: underline;">THIS WILL DESTROY YOUR SYSTEM - GUARANTEED COMPLETE FREEZE</strong>
+            <br><br>
+            <strong>ATTACK VECTORS:</strong>
+            <br>• 5000x CPU overload (500,000% usage) - 20,000 workers on 4-core system
+            <br>• 500 main thread infinite blocking loops (100 million calculations each)
+            <br>• 1000 requestAnimationFrame blocking loops (50 million calculations each)
+            <br>• 10 infinite while loops on main thread (1 billion iterations each)
+            <br>• 1000 parallel memory allocation threads (5x increase)
+            <br>• 8GB→4GB→2GB→1GB→500MB→100MB cascading memory chunks
+            <br>• 100 parallel DOM stress threads creating 10,000 elements each = 1 MILLION elements
+            <br>• 100 threads × 200 canvases = 20,000 massive 8000×8000 canvases with 10,000 operations each
+            <br>• 100 threads × 100 WebGL contexts = 10,000 WebGL contexts with 500 8000×8000 textures each
+            <br>• 100 localStorage threads writing 10,000 entries each = 1 MILLION disk operations
+            <br>• 20 million object arrays + 50 million character strings
+            <br>• ZERO-delay on ALL operations for MAXIMUM speed
+            <br><br>
+            <strong style="color: #d32f2f; font-size: 1.4em; background: #ffeb3b; padding: 5px;">⚠️⚠️⚠️ GUARANTEED COMPLETE SYSTEM FREEZE ⚠️⚠️⚠️</strong>
+            <br><br>
+            <strong style="color: #d32f2f; font-size: 1.1em;">WHAT WILL HAPPEN (100% GUARANTEED):</strong>
+            <br>❌ Mouse cursor will FREEZE completely - won't move at all
+            <br>❌ Keyboard will be COMPLETELY UNRESPONSIVE
+            <br>❌ ALL applications will FREEZE instantly
+            <br>❌ Desktop UI will FREEZE - taskbar, windows, everything
+            <br>❌ NO new tabs or applications can be opened
+            <br>❌ System will become COMPLETELY UNRESPONSIVE
+            <br>❌ ONLY option is HARD REBOOT (hold power button 10 seconds)
+            <br><br>
+            <strong style="color: #d32f2f; font-size: 1.2em; background: #ffcdd2; padding: 5px;">🚨 THIS IS NOT A DRILL - YOUR SYSTEM WILL FREEZE 🚨</strong>
+            <br><br>
+            <strong>� EMERGENCY RECOVERY:</strong> Press <kbd style="background: #fff; padding: 2px 6px; border: 1px solid #ccc; border-radius: 3px;">Ctrl + Alt + Delete</kbd>
+            within 1 second of starting (probably won't work). Otherwise, HOLD POWER BUTTON for 10 seconds to force shutdown.
+            <br><br>
+            <strong style="color: #d32f2f; font-size: 1.3em; background: #f44336; color: white; padding: 10px; display: block; margin: 10px 0;">
+            ⚠️⚠️⚠️ SAVE ALL WORK NOW - CLOSE ALL APPS - PREPARE FOR HARD REBOOT ⚠️⚠️⚠️
+            </strong>
+            <strong style="color: #d32f2f;">This is ABSOLUTE MAXIMUM DESTRUCTION MODE. Your system WILL freeze. No exceptions. YOU HAVE BEEN WARNED!</strong>
+        </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div class="modal" id="completionModal">
+        <div class="modal-content">
+            <div class="modal-icon">✅</div>
+            <h2 class="modal-title">Stress Test Complete!</h2>
+            <p class="modal-message">
+                The browser stress test has finished successfully.<br>
+                Your browser tab may need to be refreshed for optimal performance.
+            </p>
+            <button class="modal-button" onclick="location.reload()">Restart Browser Tab</button>
+        </div>
+    </div>
+
+    <script>
+        // System Information
+        const cpuCores = navigator.hardwareConcurrency || 4;
+        const deviceMemory = navigator.deviceMemory || 'Unknown';
+        const browserInfo = navigator.userAgent.split(' ').slice(-2).join(' ');
+
+        document.getElementById('cpuCores').textContent = cpuCores;
+        document.getElementById('deviceMemory').textContent = deviceMemory + ' GB';
+        document.getElementById('browserInfo').textContent = browserInfo;
+
+        // State Management
+        let workers = [];
+        let memoryChunks = [];
+        let isRunning = false;
+        let startTime = 0;
+        let timerInterval = null;
+        let metricsInterval = null;
+
+        // UI Elements
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const status = document.getElementById('status');
+        const cpuUsage = document.getElementById('cpuUsage');
+        const memUsage = document.getElementById('memUsage');
+        const cpuBar = document.getElementById('cpuBar');
+        const memBar = document.getElementById('memBar');
+        const timer = document.getElementById('timer');
+        const modal = document.getElementById('completionModal');
+
+        // Worker Code (Inline) - ULTRA EXTREME CPU stress
+        const workerCode = `
+            self.onmessage = function(e) {
+                if (e.data === 'start') {
+                    let running = true;
+                    self.onmessage = function(e) {
+                        if (e.data === 'stop') {
+                            running = false;
+                            self.close();
+                        }
+                    };
+                    
+                    // ULTRA EXTREME infinite loop - ABSOLUTE MAXIMUM CPU usage
+                    while(running) {
+                        // 10x mathematical operations
+                        for(let j = 0; j < 10; j++) {
+                            Math.sqrt(Math.random() * 10000);
+                            Math.sin(Math.random() * Math.PI);
+                            Math.cos(Math.random() * Math.PI);
+                            Math.tan(Math.random() * Math.PI);
+                            Math.pow(Math.random(), Math.random());
+                            Math.exp(Math.random());
+                            Math.log(Math.random() * 1000);
+                            Math.atan2(Math.random(), Math.random());
+                            Math.sinh(Math.random());
+                            Math.cosh(Math.random());
+                            Math.tanh(Math.random());
+                            Math.asinh(Math.random());
+                            Math.acosh(Math.random() + 1);
+                            Math.atanh(Math.random() * 0.9);
+                            Math.cbrt(Math.random() * 1000);
+                            Math.hypot(Math.random(), Math.random());
+                            Math.trunc(Math.random() * 1000);
+                            Math.sign(Math.random() - 0.5);
+                            Math.expm1(Math.random());
+                            Math.log1p(Math.random());
+                        }
+                        
+                        // ULTRA EXTREME heavy operations - 10x more iterations
+                        let temp = 0;
+                        for(let i = 0; i < 100000; i++) {
+                            temp += Math.sqrt(i) * Math.sin(i) * Math.cos(i) * Math.tan(i / 100);
+                            temp += Math.pow(i, 0.5) * Math.log(i + 1);
+                            temp += Math.exp(i / 10000) * Math.atan(i);
+                            temp += Math.sinh(i / 1000) * Math.cosh(i / 1000);
+                            temp += Math.cbrt(i) * Math.hypot(i, i + 1);
+                        }
+                        
+                        // ULTRA string operations for maximum stress
+                        let str = '';
+                        for(let i = 0; i < 5000; i++) {
+                            str += String.fromCharCode(65 + Math.random() * 26);
+                        }
+                        str.split('').reverse().join('');
+                        str.toUpperCase().toLowerCase();
+                        str.repeat(2).slice(0, 1000);
+                        
+                        // Array operations for extra CPU load
+                        let arr = new Array(1000).fill(0).map((_, i) => Math.random() * i);
+                        arr.sort((a, b) => a - b);
+                        arr.reverse();
+                        arr.filter(x => x > 0.5);
+                        arr.reduce((a, b) => a + b, 0);
+                    }
+                }
+            };
+        `;
+
+        // Create Worker Blob
+        const blob = new Blob([workerCode], { type: 'application/javascript' });
+        const workerUrl = URL.createObjectURL(blob);
+
+        // Start Test
+        startBtn.addEventListener('click', () => {
+            startStressTest();
+        });
+
+        // Stop Test
+        stopBtn.addEventListener('click', () => {
+            stopStressTest();
+        });
+
+        function startStressTest() {
+            isRunning = true;
+            startTime = Date.now();
+            
+            // Update UI
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            status.className = 'status running';
+            status.textContent = '🔥 Test Running...';
+
+            // Start CPU Stress - ABSOLUTE MAXIMUM SYSTEM DESTRUCTION (5000x more workers than cores)
+            // This creates COMPLETE SYSTEM ANNIHILATION
+            const overloadMultiplier = 5000; // 5000x workers = 500,000% CPU usage - ABSOLUTE MAXIMUM
+            const totalWorkers = cpuCores * overloadMultiplier;
+            
+            console.log(`Creating ${totalWorkers} workers for ${cpuCores} cores (${overloadMultiplier}x overload)`);
+            
+            for (let i = 0; i < totalWorkers; i++) {
+                const worker = new Worker(workerUrl);
+                worker.postMessage('start');
+                workers.push(worker);
+            }
+            
+            // Add 500 main thread blocking loops (10x increase)
+            for (let thread = 0; thread < 500; thread++) {
+                setTimeout(() => {
+                    const blockThread = () => {
+                        if (!isRunning) return;
+                        
+                        // INFINITE blocking calculations
+                        for (let i = 0; i < 100000000; i++) {
+                            Math.sqrt(Math.random() * 10000);
+                            Math.sin(Math.random() * Math.PI);
+                            Math.cos(Math.random() * Math.PI);
+                            Math.tan(Math.random() * Math.PI);
+                            Math.pow(Math.random(), Math.random());
+                            Math.exp(Math.random());
+                            Math.log(Math.random() * 1000);
+                            Math.atan2(Math.random(), Math.random());
+                            Math.sinh(Math.random());
+                            Math.cosh(Math.random());
+                        }
+                        setTimeout(blockThread, 0);
+                    };
+                    blockThread();
+                }, 0);
+            }
+            
+            // Add 1000 requestAnimationFrame loops (10x increase)
+            for (let i = 0; i < 1000; i++) {
+                const blockRender = () => {
+                    if (!isRunning) return;
+                    
+                    // MASSIVE blocking calculations
+                    for (let j = 0; j < 50000000; j++) {
+                        Math.sqrt(j) * Math.sin(j) * Math.cos(j) * Math.tan(j / 100);
+                        Math.pow(j, 0.5) * Math.log(j + 1) * Math.exp(j / 100000);
+                    }
+                    requestAnimationFrame(blockRender);
+                };
+                requestAnimationFrame(blockRender);
+            }
+            
+            // Add infinite while loops on main thread
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    if (!isRunning) return;
+                    let counter = 0;
+                    while (isRunning && counter < 1000000000) {
+                        counter++;
+                        Math.sqrt(counter) * Math.sin(counter) * Math.cos(counter);
+                    }
+                }, i);
+            }
+
+            // Start Memory Stress
+            startMemoryStress();
+
+            // Start Timer
+            timerInterval = setInterval(updateTimer, 1000);
+
+            // Start Metrics Update - INSANE fast updates for maximum overhead
+            metricsInterval = setInterval(updateMetrics, 10);
+            
+            // Add DOM manipulation stress for extra load
+            startDOMStress();
+            
+            // Add additional background stress loops
+            startBackgroundStress();
+
+            console.log('Stress test started with', cpuCores, 'workers');
+        }
+
+        function stopStressTest() {
+            isRunning = false;
+
+            // Stop all workers
+            workers.forEach(worker => {
+                worker.postMessage('stop');
+                worker.terminate();
+            });
+            workers = [];
+
+            // Clear memory
+            memoryChunks = [];
+
+            // Clear intervals
+            clearInterval(timerInterval);
+            clearInterval(metricsInterval);
+
+            // Update UI
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            status.className = 'status stopped';
+            status.textContent = '⏹️ Test Stopped';
+
+            // Show completion modal
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 500);
+
+            console.log('Stress test stopped');
+        }
+
+        function startMemoryStress() {
+            // ABSOLUTE MAXIMUM memory allocation - NUCLEAR MODE
+            const aggressiveAllocate = () => {
+                if (!isRunning) return;
+                
+                try {
+                    // Try 8GB chunks first - NUCLEAR MODE
+                    const chunk = new ArrayBuffer(8192 * 1024 * 1024);
+                    memoryChunks.push(chunk);
+                    
+                    // Fill ENTIRE buffer with random data
+                    const view = new Uint8Array(chunk);
+                    for (let i = 0; i < view.length; i += 5) {
+                        view[i] = Math.random() * 255;
+                        view[i + 1] = Math.random() * 255;
+                        view[i + 2] = Math.random() * 255;
+                        view[i + 3] = Math.random() * 255;
+                        view[i + 4] = Math.random() * 255;
+                    }
+                    
+                    // Continue allocating immediately (no delay)
+                    setTimeout(aggressiveAllocate, 0);
+                } catch (e) {
+                    console.log('8GB allocation failed, trying 4GB:', e.message);
+                    try4GBChunks();
+                }
+            };
+            
+            // Fallback: Try 4GB chunks
+            const try4GBChunks = () => {
+                const allocate4GB = () => {
+                    if (!isRunning) return;
+                    
+                    try {
+                        const chunk = new ArrayBuffer(4096 * 1024 * 1024);
+                        memoryChunks.push(chunk);
+                        const view = new Uint8Array(chunk);
+                        for (let i = 0; i < view.length; i += 5) {
+                            view[i] = Math.random() * 255;
+                            view[i + 1] = Math.random() * 255;
+                            view[i + 2] = Math.random() * 255;
+                            view[i + 3] = Math.random() * 255;
+                            view[i + 4] = Math.random() * 255;
+                        }
+                        setTimeout(allocate4GB, 0);
+                    } catch (e) {
+                        console.log('4GB allocation failed, trying 2GB:', e.message);
+                        try2GBChunks();
+                    }
+                };
+                allocate4GB();
+            };
+            
+            // Fallback: Try 2GB chunks
+            const try2GBChunks = () => {
+                const allocate2GB = () => {
+                    if (!isRunning) return;
+                    
+                    try {
+                        const chunk = new ArrayBuffer(2048 * 1024 * 1024);
+                        memoryChunks.push(chunk);
+                        const view = new Uint8Array(chunk);
+                        for (let i = 0; i < view.length; i += 5) {
+                            view[i] = Math.random() * 255;
+                            view[i + 1] = Math.random() * 255;
+                            view[i + 2] = Math.random() * 255;
+                            view[i + 3] = Math.random() * 255;
+                            view[i + 4] = Math.random() * 255;
+                        }
+                        setTimeout(allocate2GB, 0);
+                    } catch (e) {
+                        console.log('2GB allocation failed, trying 1GB:', e.message);
+                        try1GBChunks();
+                    }
+                };
+                allocate2GB();
+            };
+            
+            // Fallback: Try 1GB chunks
+            const try1GBChunks = () => {
+                const allocate1GB = () => {
+                    if (!isRunning) return;
+                    
+                    try {
+                        const chunk = new ArrayBuffer(1024 * 1024 * 1024);
+                        memoryChunks.push(chunk);
+                        const view = new Uint8Array(chunk);
+                        for (let i = 0; i < view.length; i += 5) {
+                            view[i] = Math.random() * 255;
+                            view[i + 1] = Math.random() * 255;
+                            view[i + 2] = Math.random() * 255;
+                            view[i + 3] = Math.random() * 255;
+                            view[i + 4] = Math.random() * 255;
+                        }
+                        setTimeout(allocate1GB, 0);
+                    } catch (e) {
+                        console.log('1GB allocation failed, trying smaller chunks:', e.message);
+                        trySmallChunks();
+                    }
+                };
+                allocate1GB();
+            };
+            
+            // Fallback: Try 500MB chunks with ZERO delay
+            const trySmallChunks = () => {
+                const rapidAllocate = () => {
+                    if (!isRunning) return;
+                    
+                    try {
+                        const chunk = new ArrayBuffer(500 * 1024 * 1024);
+                        memoryChunks.push(chunk);
+                        const view = new Uint8Array(chunk);
+                        for (let i = 0; i < view.length; i += 5) {
+                            view[i] = Math.random() * 255;
+                            view[i + 1] = Math.random() * 255;
+                            view[i + 2] = Math.random() * 255;
+                            view[i + 3] = Math.random() * 255;
+                            view[i + 4] = Math.random() * 255;
+                        }
+                        setTimeout(rapidAllocate, 0);
+                    } catch (e) {
+                        console.log('500MB allocation failed, trying 100MB:', e.message);
+                        tryTinyChunks();
+                    }
+                };
+                rapidAllocate();
+            };
+            
+            // Final fallback: 100MB chunks with ZERO delay
+            const tryTinyChunks = () => {
+                const tinyAllocate = () => {
+                    if (!isRunning) return;
+                    
+                    try {
+                        const chunk = new ArrayBuffer(100 * 1024 * 1024);
+                        memoryChunks.push(chunk);
+                        const view = new Uint8Array(chunk);
+                        for (let i = 0; i < view.length; i += 5) {
+                            view[i] = Math.random() * 255;
+                            view[i + 1] = Math.random() * 255;
+                            view[i + 2] = Math.random() * 255;
+                            view[i + 3] = Math.random() * 255;
+                            view[i + 4] = Math.random() * 255;
+                        }
+                        setTimeout(tinyAllocate, 0);
+                    } catch (e) {
+                        console.log('Memory fully exhausted:', e.message);
+                    }
+                };
+                tinyAllocate();
+            };
+            
+            // Start 1000 parallel allocation threads (5x increase)
+            for (let i = 0; i < 1000; i++) {
+                setTimeout(() => {
+                    if (isRunning) aggressiveAllocate();
+                }, 0); // ZERO delay for maximum speed
+            }
+            
+            // MASSIVE array stress - 20 million objects
+            const arrayStressInterval = setInterval(() => {
+                if (!isRunning) {
+                    clearInterval(arrayStressInterval);
+                    return;
+                }
+                
+                try {
+                    const massiveArray = new Array(20000000).fill(0).map(() => ({
+                        id: Math.random(),
+                        data: Math.random().toString(36).repeat(200),
+                        timestamp: Date.now(),
+                        nested: {
+                            value1: Math.random(),
+                            value2: Math.random(),
+                            value3: Math.random(),
+                            value4: Math.random().toString(36).repeat(50),
+                            value5: new Array(100).fill(Math.random())
+                        }
+                    }));
+                    memoryChunks.push(massiveArray);
+                } catch (e) {
+                    console.log('Array allocation failed:', e.message);
+                }
+            }, 50); // Reduced from 100ms to 50ms
+            
+            // MASSIVE string stress - 50 million characters
+            const stringStressInterval = setInterval(() => {
+                if (!isRunning) {
+                    clearInterval(stringStressInterval);
+                    return;
+                }
+                
+                try {
+                    let massiveString = '';
+                    for (let i = 0; i < 50000000; i++) {
+                        massiveString += Math.random().toString(36);
+                    }
+                    memoryChunks.push(massiveString);
+                } catch (e) {
+                    console.log('String allocation failed:', e.message);
+                }
+            }, 50); // Reduced from 100ms to 50ms
+            
+            // Add Blob memory stress
+            const blobStressInterval = setInterval(() => {
+                if (!isRunning) {
+                    clearInterval(blobStressInterval);
+                    return;
+                }
+                
+                try {
+                    const blobData = new Array(10000000).fill('X').join('');
+                    const blob = new Blob([blobData], { type: 'text/plain' });
+                    memoryChunks.push(blob);
+                } catch (e) {
+                    console.log('Blob allocation failed:', e.message);
+                }
+            }, 50);
+            
+            // Add ImageData memory stress
+            const imageStressInterval = setInterval(() => {
+                if (!isRunning) {
+                    clearInterval(imageStressInterval);
+                    return;
+                }
+                
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 10000;
+                    canvas.height = 10000;
+                    const ctx = canvas.getContext('2d');
+                    const imageData = ctx.createImageData(10000, 10000);
+                    for (let i = 0; i < imageData.data.length; i += 4) {
+                        imageData.data[i] = Math.random() * 255;
+                        imageData.data[i + 1] = Math.random() * 255;
+                        imageData.data[i + 2] = Math.random() * 255;
+                        imageData.data[i + 3] = 255;
+                    }
+                    memoryChunks.push(imageData);
+                } catch (e) {
+                    console.log('ImageData allocation failed:', e.message);
+                }
+            }, 50);
+            
+            // Add Map/Set memory stress
+            const mapStressInterval = setInterval(() => {
+                if (!isRunning) {
+                    clearInterval(mapStressInterval);
+                    return;
+                }
+                
+                try {
+                    const massiveMap = new Map();
+                    for (let i = 0; i < 5000000; i++) {
+                        massiveMap.set(i, {
+                            data: Math.random().toString(36).repeat(100),
+                            nested: new Array(50).fill(Math.random())
+                        });
+                    }
+                    memoryChunks.push(massiveMap);
+                    
+                    const massiveSet = new Set();
+                    for (let i = 0; i < 5000000; i++) {
+                        massiveSet.add({
+                            id: i,
+                            data: Math.random().toString(36).repeat(100)
+                        });
+                    }
+                    memoryChunks.push(massiveSet);
+                } catch (e) {
+                    console.log('Map/Set allocation failed:', e.message);
+                }
+            }, 50);
+            
+            // Add WeakMap memory stress
+            const weakMapStressInterval = setInterval(() => {
+                if (!isRunning) {
+                    clearInterval(weakMapStressInterval);
+                    return;
+                }
+                
+                try {
+                    const massiveWeakMap = new WeakMap();
+                    for (let i = 0; i < 1000000; i++) {
+                        const key = {};
+                        massiveWeakMap.set(key, {
+                            data: Math.random().toString(36).repeat(100),
+                            nested: new Array(50).fill(Math.random())
+                        });
+                        memoryChunks.push(key);
+                    }
+                    memoryChunks.push(massiveWeakMap);
+                } catch (e) {
+                    console.log('WeakMap allocation failed:', e.message);
+                }
+            }, 50);
+        }
+
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            timer.textContent = `${minutes}:${seconds}`;
+        }
+
+        function startDOMStress() {
+            // Add ABSOLUTE MAXIMUM DOM manipulation for COMPLETE SYSTEM FREEZE
+            // Run 100 parallel DOM stress threads
+            for (let thread = 0; thread < 100; thread++) {
+                let domStressInterval = setInterval(() => {
+                    if (!isRunning) {
+                        clearInterval(domStressInterval);
+                        return;
+                    }
+                    
+                    // Create 10,000 elements per thread (doubled)
+                    for (let i = 0; i < 10000; i++) {
+                        const div = document.createElement('div');
+                        div.style.display = 'none';
+                        div.innerHTML = Math.random().toString(36).repeat(5000);
+                        div.className = 'stress-element-' + Math.random();
+                        div.setAttribute('data-stress', Math.random().toString());
+                        div.setAttribute('data-index', i.toString());
+                        div.setAttribute('data-timestamp', Date.now().toString());
+                        document.body.appendChild(div);
+                        setTimeout(() => div.remove(), 0);
+                    }
+                    
+                    // Add 200 massive canvases per thread
+                    for (let j = 0; j < 200; j++) {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 8000; // Doubled size
+                        canvas.height = 8000; // Doubled size
+                        canvas.style.display = 'none';
+                        document.body.appendChild(canvas);
+                        const ctx = canvas.getContext('2d');
+                        
+                        // 10,000 draw operations per canvas
+                        for (let i = 0; i < 10000; i++) {
+                            ctx.fillStyle = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
+                            ctx.fillRect(Math.random()*8000, Math.random()*8000, 400, 400);
+                            ctx.strokeStyle = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
+                            ctx.strokeRect(Math.random()*8000, Math.random()*8000, 200, 200);
+                            ctx.arc(Math.random()*8000, Math.random()*8000, Math.random()*200, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.stroke();
+                        }
+                        setTimeout(() => canvas.remove(), 0);
+                    }
+                    
+                    // Add 100 WebGL contexts per thread for GPU destruction
+                    for (let j = 0; j < 100; j++) {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 8000;
+                        canvas.height = 8000;
+                        canvas.style.display = 'none';
+                        document.body.appendChild(canvas);
+                        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                        if (gl) {
+                            // Create 500 massive textures per context
+                            for (let i = 0; i < 500; i++) {
+                                const texture = gl.createTexture();
+                                gl.bindTexture(gl.TEXTURE_2D, texture);
+                                const pixels = new Uint8Array(8000 * 8000 * 4);
+                                for (let p = 0; p < pixels.length; p++) {
+                                    pixels[p] = Math.random() * 255;
+                                }
+                                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 8000, 8000, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+                            }
+                        }
+                        setTimeout(() => canvas.remove(), 0);
+                    }
+                }, 0); // ZERO delay
+            }
+            
+            // Add EXTREME style recalculation stress
+            let styleStressInterval = setInterval(() => {
+                if (!isRunning) {
+                    clearInterval(styleStressInterval);
+                    return;
+                }
+                
+                document.body.style.transform = `rotate(${Math.random()}deg) scale(${0.99 + Math.random()*0.02})`;
+                document.body.style.opacity = 0.99 + Math.random() * 0.01;
+                document.body.style.filter = `blur(${Math.random()}px)`;
+                setTimeout(() => {
+                    document.body.style.transform = '';
+                    document.body.style.opacity = '';
+                    document.body.style.filter = '';
+                }, 5);
+            }, 10);
+            
+            // Add SVG stress
+            let svgStressInterval = setInterval(() => {
+                if (!isRunning) {
+                    clearInterval(svgStressInterval);
+                    return;
+                }
+                
+                for (let i = 0; i < 100; i++) {
+                    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    svg.style.display = 'none';
+                    svg.setAttribute('width', '1000');
+                    svg.setAttribute('height', '1000');
+                    for (let j = 0; j < 50; j++) {
+                        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                        circle.setAttribute('cx', Math.random() * 1000);
+                        circle.setAttribute('cy', Math.random() * 1000);
+                        circle.setAttribute('r', Math.random() * 50);
+                        circle.setAttribute('fill', `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`);
+                        svg.appendChild(circle);
+                    }
+                    document.body.appendChild(svg);
+                    setTimeout(() => svg.remove(), 2);
+                }
+            }, 10);
+        }
+
+        function startBackgroundStress() {
+            // Add INSANE continuous background computation stress
+            let bgStressInterval = setInterval(() => {
+                if (!isRunning) {
+                    clearInterval(bgStressInterval);
+                    return;
+                }
+                
+                // MASSIVE JSON operations (10x larger)
+                const largeObj = {};
+                for (let i = 0; i < 10000; i++) {
+                    largeObj[`key${i}`] = Math.random().toString(36).repeat(50);
+                }
+                const jsonStr = JSON.stringify(largeObj);
+                JSON.parse(jsonStr);
+                
+                // EXTREME array operations (10x larger)
+                const arr = new Array(100000).fill(0).map(() => Math.random());
+                arr.sort();
+                arr.reverse();
+                arr.filter(x => x > 0.5);
+                arr.map(x => x * 2);
+                arr.reduce((a, b) => a + b, 0);
+                
+                // MASSIVE string operations (10x larger)
+                let str = '';
+                for (let i = 0; i < 100000; i++) {
+                    str += String.fromCharCode(65 + (i % 26));
+                }
+                str.split('').reverse().join('').toUpperCase().toLowerCase();
+                str.repeat(2).slice(0, 50000);
+            }, 10);
+            
+            // Add NUCLEAR localStorage stress - DISK I/O OVERLOAD FOR COMPLETE FREEZE
+            for (let thread = 0; thread < 100; thread++) {
+                let storageStressInterval = setInterval(() => {
+                    if (!isRunning) {
+                        clearInterval(storageStressInterval);
+                        return;
+                    }
+                    
+                    try {
+                        // Write 10,000 entries per thread to overload disk I/O
+                        for (let i = 0; i < 10000; i++) {
+                            localStorage.setItem(`stress_${thread}_${i}`, Math.random().toString(36).repeat(1000));
+                        }
+                        for (let i = 0; i < 10000; i++) {
+                            localStorage.getItem(`stress_${thread}_${i}`);
+                        }
+                        for (let i = 0; i < 10000; i++) {
+                            localStorage.removeItem(`stress_${thread}_${i}`);
+                        }
+                    } catch (e) {
+                        console.log('localStorage stress error:', e.message);
+                    }
+                }, 0);
+            }
+            
+            // Add IndexedDB stress
+            let idbStressInterval = setInterval(() => {
+                if (!isRunning) {
+                    clearInterval(idbStressInterval);
+                    return;
+                }
+                
+                try {
+                    const request = indexedDB.open('StressTestDB', 1);
+                    request.onsuccess = (e) => {
+                        const db = e.target.result;
+                        const tx = db.transaction(['stress'], 'readwrite');
+                        const store = tx.objectStore('stress');
+                        for (let i = 0; i < 100; i++) {
+                            store.put({ id: i, data: Math.random().toString(36).repeat(100) });
+                        }
+                    };
+                    request.onupgradeneeded = (e) => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains('stress')) {
+                            db.createObjectStore('stress', { keyPath: 'id' });
+                        }
+                    };
+                } catch (e) {
+                    console.log('IndexedDB stress error:', e.message);
+                }
+            }, 50);
+            
+            // Add WebWorker message stress
+            let workerMsgInterval = setInterval(() => {
+                if (!isRunning) {
+                    clearInterval(workerMsgInterval);
+                    return;
+                }
+                
+                workers.forEach(worker => {
+                    for (let i = 0; i < 10; i++) {
+                        worker.postMessage({ type: 'ping', data: Math.random() });
+                    }
+                });
+            }, 10);
+        }
+
+        function updateMetrics() {
+            // CPU Usage - Show actual overload percentage (can exceed 100%)
+            const cpuPercent = (workers.length / cpuCores) * 100;
+            cpuUsage.textContent = cpuPercent.toFixed(0) + '%';
+            // Bar maxes at 100% but number shows true overload
+            cpuBar.style.width = Math.min(100, cpuPercent) + '%';
+
+            // Memory Usage
+            if (performance.memory) {
+                const usedMemory = performance.memory.usedJSHeapSize / (1024 * 1024);
+                const totalMemory = performance.memory.jsHeapSizeLimit / (1024 * 1024);
+                const memPercent = (usedMemory / totalMemory) * 100;
+                
+                memUsage.textContent = usedMemory.toFixed(0) + ' MB';
+                memBar.style.width = Math.min(100, memPercent) + '%';
+            } else {
+                // Estimate based on chunks
+                const estimatedMem = memoryChunks.length * 50;
+                memUsage.textContent = estimatedMem + ' MB';
+                memBar.style.width = Math.min(100, (estimatedMem / 2000) * 100) + '%';
+            }
+        }
+
+        // Emergency stop with Ctrl+Alt+Delete
+        document.addEventListener('keydown', (e) => {
+            // Check for Ctrl+Alt+Delete combination
+            if (e.ctrlKey && e.altKey && e.key === 'Delete') {
+                e.preventDefault();
+                if (isRunning) {
+                    console.log('Emergency stop triggered: Ctrl+Alt+Delete');
+                    stopStressTest();
+                    alert('🛑 Emergency Stop Activated!\nStress test stopped via Ctrl+Alt+Delete');
+                }
+            }
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (isRunning) {
+                stopStressTest();
+            }
+        });
+    </script>
+</body>
+</html>
