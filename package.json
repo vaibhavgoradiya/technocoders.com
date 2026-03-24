@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name=technocoders-website"
+    "deploy": "npm run build && wrangler pages deploy dist --project-name=technocoders-website --branch=production"
   },
   "dependencies": {
     "@emailjs/browser": "^4.3.3",
